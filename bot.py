@@ -12,9 +12,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # ── Ссылки на фото тарифов из GitHub ──
-PHOTO_VSE     = "https://raw.githubusercontent.com/ВАШ_НИК/ВАШ_РЕПО/main/image1.jpg"
-PHOTO_PREMIUM = "https://raw.githubusercontent.com/ВАШ_НИК/ВАШ_РЕПО/main/image2.jpg"
-PHOTO_VIP     = "https://raw.githubusercontent.com/ВАШ_НИК/ВАШ_РЕПО/main/image3.jpg"
+PHOTO_VSE     = "https://raw.githubusercontent.com/magafut/telegramm_bot1223/main/image1.jpg.jpg"
+PHOTO_PREMIUM = "https://raw.githubusercontent.com/magafut/telegramm_bot1223/main/image3.jpg.jpg"
+PHOTO_VIP     = "https://raw.githubusercontent.com/magafut/telegramm_bot1223/main/image2.jpg.jpg"
 
 WELCOME_TEXT = (
     "👋 Привет! Меня зовут <b>Галия</b>.\n\n"
