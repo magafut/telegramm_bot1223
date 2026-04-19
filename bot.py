@@ -1,3 +1,4 @@
+import os
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
@@ -10,251 +11,217 @@ from telegram.ext import (
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# ──────────────────────────────────────────────
-# ТЕКСТЫ
-# ──────────────────────────────────────────────
-
 WELCOME_TEXT = (
-    "Привет! Надоело, что деньги утекают сквозь пальцы, "
-    "а на развитие вечно нет времени? 📉\n\n"
-    "Я помогу тебе вырваться из этого цикла. "
-    "Забирай <b>бесплатный план по выходу на новый уровень</b>, "
-    "который сэкономит тебе минимум год жизни!"
+    "Привет! Меня зовут Галия. Всего 3 года назад я была в отчаянии: по уши в долгах, "
+    "денег не хватало даже на продукты. Мы буквально выживали — жили от зарплаты до зарплаты "
+    "и считали каждую копейку.\n\n"
+    "Но я нашла выход — и моя жизнь кардинально изменилась! Подробности — на моей странице в Instagram.\n\n"
+    "За последние 2,5 года я заработала более <b>10 миллионов рублей</b>, используя только телефон. "
+    "Сейчас у меня свыше 30 учениц — они каждый день радуют меня своими успехами.\n\n"
+    "Хочешь узнать, как начать зарабатывать онлайн без опыта? Жми скорее!"
 )
 
-PLAN_TEXT = (
-    "<b>План: 5 шагов к росту 🚀</b>\n\n"
-    "1. <b>Аудит финансов:</b> Выпиши 3 главные статьи трат.\n"
-    "   💡 <i>Лайфхак:</i> Крупные покупки (от 3к) делай только через 24 часа.\n\n"
-    "2. <b>Тайм-менеджмент:</b> Удали 3 лишних приложения-пожирателя времени.\n"
-    "   📈 <i>Результат:</i> +40 минут в день на развитие.\n\n"
-    "3. <b>Заначка:</b> Открой счёт и переведи туда 500–1000 ₽ прямо сейчас. Сначала плати себе.\n\n"
-    "4. <b>Фокус дня:</b> С вечера пиши только ОДНУ главную задачу на завтра.\n\n"
-    "5. <b>Инвестиции:</b> Помни, что обучение даёт самый высокий % доходности.\n\n"
-    "<b>Хочешь внедрить это по шагам вместе со мной?</b>"
+SUBSCRIBE_TEXT = (
+    "Прежде чем я раскрою все секреты заработка, сделай небольшой шаг — подпишись на мой личный канал 💛\n\n"
+    "Там ты найдёшь:\n"
+    "• реальные истории учениц и их успехи;\n"
+    "• честные отзывы;\n"
+    "• мои достижения и немного закулисья жизни.\n\n"
+    "Так ты убедишься, что я — живой человек, а не просто картинка из рекламы 😊\n\n"
+    "👉 Ссылка: @Gallu1990\n\n"
+    "После подписки возвращайся сюда — и жми кнопку 👇"
 )
 
-CONSEQUENCES_TEXT = (
-    "<b>Что будет, если оставить всё как есть:</b>\n\n"
-    "1. <b>Минус сотни тысяч:</b> Без аудита ты продолжишь сливать до 30% дохода в никуда.\n"
-    "2. <b>Украденная жизнь:</b> Пожиратели времени заберут у тебя 10 суток чистого времени в год.\n"
-    "3. <b>Жизнь в долг:</b> Любая поломка или штраф станут трагедией без финансовой подушки.\n"
-    "4. <b>Бег на месте:</b> Без фокуса ты будешь пахать 24/7, но не сдвинешься ни на шаг.\n"
-    "5. <b>Деградация:</b> Пока ты экономишь на обучении, другие забирают твои деньги и возможности.\n\n"
-    "<b>Оставляем всё как есть или начнём менять ситуацию?</b>"
+DIRECTIONS_TEXT = (
+    "Давай тезисно пропишу, какие варианты есть:\n\n"
+    "👩‍💼 <b>Куратор онлайн‑школы</b> — от 200 000 руб./мес.\n\n"
+    "💻 <b>Онлайн‑специалист</b> — более 25 профессий, от 70 000 руб.\n\n"
+    "🎨 <b>Инфографика для маркетплейсов</b> — от 50 000 руб./мес.\n\n"
+    "📋 <b>Заработок на заданиях</b> — от 15 000 руб., старт уже сегодня.\n\n"
+    "Что тебе ближе?"
 )
 
-FUTURE_TEXT = (
-    "<b>Твоя жизнь через 1 год:</b>\n\n"
-    "🛡 <b>Финансовый щит:</b> У тебя есть подушка безопасности. Кредиты гасятся, а импульсивные траты исчезли.\n\n"
-    "⏰ <b>Свободное время:</b> Ты вернул(а) себе 250 часов в год. Больше никакой прокрастинации и пустых соцсетей.\n\n"
-    "💸 <b>Рост дохода:</b> Благодаря обучению твоя ценность выросла. Ты зарабатываешь на 30–50% больше.\n\n"
-    "🎯 <b>Ясные цели:</b> За год ты закрыл(а) ~300 важных задач. Хаос сменился чётким планом.\n\n"
-    "💪 <b>Уверенность:</b> Ты управляешь деньгами, а не они тобой. Появилось чувство контроля над будущим.\n\n"
-    "Сделаем первый шаг к этому результату?"
+CURATOR_TEXT = (
+    "<b>Куратор онлайн‑школы</b> — специалист по сопровождению учеников.\n"
+    "Работа только с входящими заявками — активный поиск клиентов не нужен!\n\n"
+    "Вы получите:\n"
+    "✅ Пошаговое обучение\n"
+    "✅ Готовые инструменты (посты, макеты, презентации)\n"
+    "✅ Полный доступ к проекту\n\n"
+    "💰 Доход напрямую на карту — <b>от 100 000 р./мес.</b>"
 )
 
-DIRECTION_TEXT = (
-    "В нашей школе более 10 направлений — от аналитики до творчества. "
-    "Чтобы ты не тратил(а) время на «не своё», давай выберем то, что принесёт тебе деньги и удовольствие.\n\n"
-    "<b>Что тебе ближе?</b>"
+CURATOR_TARIFF_TEXT = (
+    "<b>Все тарифы включают:</b>\n"
+    "• Возможность стать куратором\n"
+    "• Бесплатные обновления\n"
+    "• Бессрочный доступ к материалам\n"
+    "• Доступ ко всем рабочим чатам\n"
+    "• 6 месяцев кураторства по орг. вопросам\n"
+    "• Курс с заданиями в подарок\n\n"
+    "⭐ <b>VIP‑тариф</b> — в подарок мой авторский канал со всеми знаниями!\n"
+    "Мой результат: более 300 000 р./мес., рекорд за день — 500 500 р.\n\n"
+    "Сделайте выбор в пользу своего успеха!"
 )
 
-VISUAL_TEXT = (
-    "Круто! В этой нише сейчас самый быстрый рост. Выбирай свой инструмент:"
+PAYMENT_TEXT = (
+    "Сейчас действуют <b>специальные цены</b>:\n\n"
+    "📦 <b>Тариф «Всё включено»</b>\n"
+    "<b>9 990 р.</b> <s>14 990 р.</s>\n"
+    "Ожидаемый доход: от 50 000 р./мес.\n"
+    "Ссылка на оплату: [добавьте ссылку]\n\n"
+    "💎 <b>Тариф «Премиум»</b>\n"
+    "<b>19 990 р.</b> <s>24 990 р.</s>\n"
+    "Включает: бессрочное наставничество + авторский канал.\n"
+    "Ожидаемый доход: от 200 000 р./мес.\n"
+    "Ссылка на оплату: [добавьте ссылку]\n\n"
+    "⏰ Успейте воспользоваться предложением по сниженной стоимости!"
 )
 
-ANALYTICS_TEXT = (
-    "Аналитика — основа любого успешного бизнеса. Выбирай свой инструмент:"
+SPECIALIST_TEXT = (
+    "<b>Онлайн‑специалист</b> — освойте удалённую профессию!\n\n"
+    "Более <b>30 направлений</b> по востребованным профессиям.\n\n"
+    "<b>Как проходит обучение:</b>\n"
+    "1. Выбор направления\n"
+    "2. Прохождение курса\n"
+    "3. Сдача итогового теста\n"
+    "4. Именной сертификат\n"
+    "5. Формирование портфолио\n"
+    "6. Первые реальные заказы\n\n"
+    "✅ Бессрочный доступ, бесплатные обновления, поддержка.\n\n"
+    "💰 Уже в первый месяц — доход <b>от 50 000 р.</b>"
 )
 
-SOCIAL_TEXT = (
-    "Контент и общение — двигатель современного маркетинга. Выбирай свой инструмент:"
+SPECIALIST_TARIFF_TEXT = (
+    "<b>Все тарифы включают:</b>\n"
+    "• Бессрочный доступ к материалам\n"
+    "• Бесплатные обновления\n"
+    "• Доступ ко всем рабочим чатам\n"
+    "• 6 месяцев кураторства\n"
+    "• Канал с моими рекомендациями\n"
+    "• Курс с заданиями в подарок\n\n"
+    "⭐ <b>VIP‑тариф</b> — именно с него начинала я!\n"
+    "Мой результат: более 300 000 р./мес., рекорд — 500 000 р. за день.\n\n"
+    "Выбор за вами!"
 )
 
-TECH_TEXT = (
-    "Технари нужны везде! Выбирай свою специализацию:"
+INFOGRAPHIC_TEXT = (
+    "<b>Инфографика: профессия с доходом от 1 500 р. в день</b>\n\n"
+    "• Стоимость одной картинки — ~500 р. (~20 мин. работы)\n"
+    "• В карточке товара 5–10 изображений\n"
+    "• Доход с одного заказа — от 2 500 до 5 000 р. (~2 часа)\n\n"
+    "Уже в первые дни — <b>от 1 500 р. ежедневно!</b>\n\n"
+    "Не нужно быть дизайнером — достаточно пройти наше обучение."
 )
 
-OFFER_MONTAGE = (
-    "Видеоконтент сейчас — нефть 21 века. Компании стоят в очереди за хорошими монтажёрами.\n\n"
-    "<b>Твой результат через 2 месяца:</b>\n"
-    "1. Навыки профи в монтаже на смартфоне/ПК.\n"
-    "2. Готовое портфолио из 10 работ.\n"
-    "3. Первые заказы от 30 000 ₽ в месяц.\n\n"
-    "Хочешь посмотреть <b>3 примера работ наших учеников</b>, которые они сделали уже на первой неделе?"
+INFOGRAPHIC_PAYMENT_TEXT = (
+    "<b>Курс «Инфографика»</b>\n\n"
+    "✅ Бессрочный доступ\n"
+    "✅ Чат помощи\n"
+    "✅ Именной сертификат бесплатно\n\n"
+    "⏰ <b>Только 24 часа:</b> <b>2 500 р.</b> <s>4 990 р.</s>\n\n"
+    "💰 Окупите курс в первый месяц и выйдете на доход от 50 000 р.\n\n"
+    "Ссылка на оплату: [добавьте ссылку]"
 )
 
-FINAL_TEXT = (
-    "Кстати! К любому курсу ты получаешь наш <b>Бонус: Модуль по личной эффективности</b>.\n\n"
-    "Мало просто научиться монтировать или вести СММ. "
-    "Важно уметь планировать день, чтобы не выгорать и успевать жить. "
-    "Мы научим и тому, и другому.\n\n"
-    "<b>Готов(а) инвестировать в новую жизнь?</b>"
+TASKS_TEXT = (
+    "<b>Заработок на заданиях</b> — топ 2026 года!\n\n"
+    "Идеально без соцсетей и продаж.\n\n"
+    "<b>Задания и оплата:</b>\n"
+    "• Отзывы — от 100 р.\n"
+    "• Скачивание приложений — до 300 р.\n"
+    "• Звонки — от 100 р.\n"
+    "• Опросы — от 50 р.\n"
+    "• Презентации — от 1 000 р.\n"
+    "• Тексты — от 500 р.\n\n"
+    "<b>Кому подойдёт:</b> мамам в декрете, студентам, фрилансерам.\n\n"
+    "<b>График:</b> гибкий, сами решаете когда работать.\n"
+    "<b>Вывод:</b> на карты, кошельки, номер телефона."
 )
 
-# ──────────────────────────────────────────────
-# КЛАВИАТУРЫ
-# ──────────────────────────────────────────────
+TASKS_PAYMENT_TEXT = (
+    "<b>Курс «Заработок на заданиях»</b>\n\n"
+    "✅ Бессрочный доступ\n"
+    "✅ Чат помощи постоянно\n"
+    "✅ Именной сертификат\n"
+    "✅ Старт заработка с первого дня\n\n"
+    "⏰ <b>Только 24 часа:</b> <b>2 490 р.</b> <s>4 990 р.</s>\n\n"
+    "💰 После обучения — доход от 15 000 р. в месяц.\n\n"
+    "Ссылка на оплату: [добавьте ссылку]"
+)
+
+DONE_TEXT = (
+    "Отлично! 🎉 Наш менеджер свяжется с тобой в ближайшее время.\n\n"
+    "Если хочешь ускорить — напиши напрямую: @Gallu1990 😊"
+)
 
 def kb_start():
-    return InlineKeyboardMarkup([[InlineKeyboardButton("📋 Получить план", callback_data="plan")]])
+    return InlineKeyboardMarkup([[InlineKeyboardButton("Узнать подробности", callback_data="subscribe")]])
 
-def kb_plan():
-    return InlineKeyboardMarkup([[InlineKeyboardButton("🔥 Да, погнали!", callback_data="consequences")]])
-
-def kb_consequences():
-    return InlineKeyboardMarkup([[InlineKeyboardButton("🚀 Выбраться из ямы", callback_data="future")]])
-
-def kb_future():
-    return InlineKeyboardMarkup([[InlineKeyboardButton("🚀 Начать путь к цели", callback_data="direction")]])
+def kb_subscribe():
+    return InlineKeyboardMarkup([[InlineKeyboardButton("✅ Подписался(ась)", callback_data="directions")]])
 
 def kb_directions():
     return InlineKeyboardMarkup([
-        [InlineKeyboardButton("📊 Аналитика и порядок", callback_data="dir_analytics")],
-        [InlineKeyboardButton("🎨 Творчество и визуал", callback_data="dir_visual")],
-        [InlineKeyboardButton("📱 Общение и контент", callback_data="dir_social")],
-        [InlineKeyboardButton("🛠 Техническая часть", callback_data="dir_tech")],
+        [InlineKeyboardButton("👩‍💼 Куратор онлайн‑школы", callback_data="curator")],
+        [InlineKeyboardButton("💻 Онлайн‑специалист", callback_data="specialist")],
+        [InlineKeyboardButton("🎨 Инфографика для маркетплейсов", callback_data="infographic")],
+        [InlineKeyboardButton("📋 Заработок на заданиях", callback_data="tasks")],
     ])
 
-def kb_visual():
-    return InlineKeyboardMarkup([
-        [InlineKeyboardButton("🎬 Монтажёр видео", callback_data="offer_montage")],
-        [InlineKeyboardButton("📸 Фотограф", callback_data="offer_photo")],
-        [InlineKeyboardButton("🎨 Графический дизайн", callback_data="offer_design")],
-    ])
+def kb_one(text, cb):
+    return InlineKeyboardMarkup([[InlineKeyboardButton(text, callback_data=cb)]])
 
-def kb_analytics():
-    return InlineKeyboardMarkup([
-        [InlineKeyboardButton("🛒 Менеджер маркетплейсов", callback_data="offer_marketplace")],
-        [InlineKeyboardButton("🎯 Таргетолог", callback_data="offer_target")],
-    ])
-
-def kb_social():
-    return InlineKeyboardMarkup([
-        [InlineKeyboardButton("📲 СММ-менеджер", callback_data="offer_smm")],
-        [InlineKeyboardButton("✍️ Копирайтер", callback_data="offer_copy")],
-        [InlineKeyboardButton("🌟 Сторисмейкер", callback_data="offer_stories")],
-    ])
-
-def kb_tech():
-    return InlineKeyboardMarkup([
-        [InlineKeyboardButton("🌐 Создатель сайтов", callback_data="offer_web")],
-        [InlineKeyboardButton("⚙️ Техспец", callback_data="offer_techspec")],
-    ])
-
-def kb_offer():
-    return InlineKeyboardMarkup([
-        [InlineKeyboardButton("👀 Да, покажи!", callback_data="final")],
-        [InlineKeyboardButton("💰 Узнать цену и забронировать место", callback_data="final")],
-    ])
-
-def kb_final():
-    return InlineKeyboardMarkup([
-        [InlineKeyboardButton("🚀 Хочу курс + Бонус!", callback_data="done")],
-        [InlineKeyboardButton("🎁 Записаться на бесплатный урок", callback_data="done")],
-    ])
-
-# ──────────────────────────────────────────────
-# ХЭНДЛЕРЫ
-# ──────────────────────────────────────────────
+def kb_payment():
+    return InlineKeyboardMarkup([[InlineKeyboardButton("✅ Оплатил(а)", callback_data="done")]])
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_html(WELCOME_TEXT, reply_markup=kb_start())
-
 
 async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
     data = query.data
 
-    # ── Основной сценарий ──
-    if data == "plan":
-        await query.message.reply_html(PLAN_TEXT, reply_markup=kb_plan())
+    if data == "subscribe":
+        await query.message.reply_html(SUBSCRIBE_TEXT, reply_markup=kb_subscribe())
+    elif data == "directions":
+        await query.message.reply_html(DIRECTIONS_TEXT, reply_markup=kb_directions())
+    elif data == "curator":
+        await query.message.reply_html(CURATOR_TEXT, reply_markup=kb_one("🚀 Стать куратором", "curator_tariff"))
+    elif data == "curator_tariff":
+        await query.message.reply_html(CURATOR_TARIFF_TEXT, reply_markup=kb_one("💳 Перейти к оплате", "curator_payment"))
+    elif data == "curator_payment":
+        await query.message.reply_html(PAYMENT_TEXT, reply_markup=kb_payment())
+    elif data == "specialist":
+        await query.message.reply_html(SPECIALIST_TEXT, reply_markup=kb_one("🚀 Стать онлайн‑специалистом", "specialist_tariff"))
+    elif data == "specialist_tariff":
+        await query.message.reply_html(SPECIALIST_TARIFF_TEXT
 
-    elif data == "consequences":
-        await query.message.reply_html(CONSEQUENCES_TEXT, reply_markup=kb_consequences())
 
-    elif data == "future":
-        await query.message.reply_html(FUTURE_TEXT, reply_markup=kb_future())
-
-    elif data == "direction":
-        await query.message.reply_html(DIRECTION_TEXT, reply_markup=kb_directions())
-
-    # ── Выбор направления ──
-    elif data == "dir_visual":
-        await query.message.reply_html(VISUAL_TEXT, reply_markup=kb_visual())
-
-    elif data == "dir_analytics":
-        await query.message.reply_html(ANALYTICS_TEXT, reply_markup=kb_analytics())
-
-    elif data == "dir_social":
-        await query.message.reply_html(SOCIAL_TEXT, reply_markup=kb_social())
-
-    elif data == "dir_tech":
-        await query.message.reply_html(TECH_TEXT, reply_markup=kb_tech())
-
-    # ── Офферы ──
-    elif data == "offer_montage":
-        await query.message.reply_html(OFFER_MONTAGE, reply_markup=kb_offer())
-
-    elif data in (
-        "offer_photo", "offer_design", "offer_marketplace",
-        "offer_target", "offer_smm", "offer_copy",
-        "offer_stories", "offer_web", "offer_techspec",
-    ):
-        # Универсальный оффер для остальных профессий
-        profession_names = {
-            "offer_photo": "Фотограф",
-            "offer_design": "Графический дизайнер",
-            "offer_marketplace": "Менеджер маркетплейсов",
-            "offer_target": "Таргетолог",
-            "offer_smm": "СММ-менеджер",
-            "offer_copy": "Копирайтер",
-            "offer_stories": "Сторисмейкер",
-            "offer_web": "Создатель сайтов",
-            "offer_techspec": "Техспец",
-        }
-        name = profession_names.get(data, "Специалист")
-        text = (
-            f"Отличный выбор! <b>{name}</b> — одна из самых востребованных профессий прямо сейчас.\n\n"
-            "<b>Твой результат через 2 месяца:</b>\n"
-            "1. Профессиональные навыки с нуля.\n"
-            "2. Готовое портфолио из реальных проектов.\n"
-            "3. Первые заказы от 25 000–40 000 ₽ в месяц.\n\n"
-            "Хочешь посмотреть <b>примеры работ наших учеников</b>?"
-        )
-        await query.message.reply_html(text, reply_markup=kb_offer())
-
-    # ── Финальный этап ──
-    elif data == "final":
-        await query.message.reply_html(FINAL_TEXT, reply_markup=kb_final())
-
+, reply_markup=kb_one("💳 Перейти к оплате", "specialist_payment"))
+    elif data == "specialist_payment":
+        await query.message.reply_html(PAYMENT_TEXT, reply_markup=kb_payment())
+    elif data == "infographic":
+        await query.message.reply_html(INFOGRAPHIC_TEXT, reply_markup=kb_one("✅ Готова оплатить", "infographic_payment"))
+    elif data == "infographic_payment":
+        await query.message.reply_html(INFOGRAPHIC_PAYMENT_TEXT, reply_markup=kb_payment())
+    elif data == "tasks":
+        await query.message.reply_html(TASKS_TEXT, reply_markup=kb_one("📋 Выполнять задания", "tasks_payment"))
+    elif data == "tasks_payment":
+        await query.message.reply_html(TASKS_PAYMENT_TEXT, reply_markup=kb_one("🚀 Начнем!", "done"))
     elif data == "done":
-        text = (
-            "Отлично! 🎉 Наш менеджер свяжется с тобой в ближайшее время "
-            "и расскажет все детали.\n\n"
-            "А пока — напиши нам в личку или оставь свой контакт, "
-            "чтобы мы могли с тобой связаться. 😊"
-        )
-        await query.message.reply_html(text)
-
-
-# ──────────────────────────────────────────────
-# ЗАПУСК
-# ──────────────────────────────────────────────
+        await query.message.reply_html(DONE_TEXT)
 
 def main():
-    import os
-    TOKEN = os.environ.get("BOT_TOKEN") # ← Замени на токен от @BotFather
-
+    TOKEN = os.environ.get("BOT_TOKEN")
+    if not TOKEN:
+        raise ValueError("Переменная окружения BOT_TOKEN не задана!")
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(callback_handler))
-
     print("Бот запущен...")
     app.run_polling()
-
 
 if __name__ == "__main__":
     main()
