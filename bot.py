@@ -245,7 +245,8 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ──────────────────────────────────────────────
 
 def main():
-    TOKEN = "YOUR_BOT_TOKEN_HERE"  # ← Замени на токен от @BotFather
+    import os
+    TOKEN = os.environ.get("BOT_TOKEN") # ← Замени на токен от @BotFather
 
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
