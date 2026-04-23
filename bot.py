@@ -1,6 +1,6 @@
 import os
 import logging
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application,
     CommandHandler,
@@ -11,10 +11,9 @@ from telegram.ext import (
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# ── Ссылки на фото тарифов из GitHub ──
-PHOTO_VSE     = "https://raw.githubusercontent.com/magafut/telegramm_bot1223/main/image1.jpg.jpg"
-PHOTO_PREMIUM = "https://raw.githubusercontent.com/magafut/telegramm_bot1223/main/image3.jpg.jpg"
-PHOTO_VIP     = "https://raw.githubusercontent.com/magafut/telegramm_bot1223/main/image2.jpg.jpg"
+# ──────────────────────────────────────────────
+# ТЕКСТЫ
+# ──────────────────────────────────────────────
 
 WELCOME_TEXT = (
     "👋 Привет! Меня зовут <b>Галия</b>.\n\n"
@@ -23,8 +22,8 @@ WELCOME_TEXT = (
     "Но я нашла выход — и моя жизнь кардинально изменилась! "
     "Подробности — на моей странице в Instagram 👇\n"
     "📸 https://www.instagram.com/gallyu_abdullina\n\n"
-    "💰 За последние 2,5 года я заработала более <b>2 миллиона рублей</b>, используя только телефон.\n"
-    "Сейчас у меня свыше <b>12 учениц</b> — они каждый день радуют меня своими успехами 🙌\n\n"
+    "💰 За последние 2,5 года я заработала более <b>10 миллионов рублей</b>, используя только телефон.\n"
+    "Сейчас у меня свыше <b>30 учениц</b> — они каждый день радуют меня своими успехами 🙌\n\n"
     "🚀 Хочешь узнать, как начать зарабатывать онлайн <b>без опыта</b>? Жми скорее!"
 )
 
@@ -74,11 +73,11 @@ CURATOR_TEXT = (
 
 CURATOR_TARIFF_TEXT = (
     "💼 <b>Выбери свой тариф и стань куратором INSTART!</b>\n\n"
-    "📦 <b>ВСЁ ВКЛЮЧЕНО</b> — <b>9 990 р.</b> <s>14 990 р.</s>\n"
+    "📦 <b>ВСЁ ВКЛЮЧЕНО</b> — <b>4 990 р.</b>\n"
     "Более 20 курсов по востребованным онлайн-профессиям\n\n"
-    "⭐️ <b>ПРЕМИУМ</b> — <b>19 990 р.</b> <s>24 990 р.</s>\n"
+    "⭐️ <b>ПРЕМИУМ</b> — <b>12 990 р.</b>\n"
     "Хит продаж! Расширенный пакет курсов + рабочие инструменты\n\n"
-    "👑 <b>VIP</b> — <b>24 990 р.</b> <s>34 990 р.</s>\n"
+    "👑 <b>VIP</b> — <b>19 990 р.</b>\n"
     "Легендарные программы основателей INSTART + курсы для масштабирования\n\n"
     "🎯 <b>Все тарифы включают:</b>\n"
     "• Обучение для кураторов\n"
@@ -92,7 +91,7 @@ CURATOR_TARIFF_TEXT = (
 
 PAYMENT_VSE_TEXT = (
     "📦 <b>Тариф «ВСЁ ВКЛЮЧЕНО»</b>\n\n"
-    "💰 <b>9 990 р.</b> <s>14 990 р.</s>\n\n"
+    "💰 <b>4 990 р.</b>\n\n"
     "📚 Содержит <b>более 20 курсов:</b>\n"
     "• Куратор INSTART (партнёр проекта)\n"
     "• Дизайнер инфографики для WB/OZON\n"
@@ -102,13 +101,13 @@ PAYMENT_VSE_TEXT = (
     "• Продвижение в TG и Instagram\n"
     "• И многое другое!\n\n"
     "📈 Ожидаемый доход: от 50 000 р./мес.\n\n"
-    "🔗 Ссылка на оплату: [добавьте ссылку]\n\n"
+    "💳 Для оплаты и получения доступа напиши напрямую: <b>@Gallu1990</b>\n\n"
     "⏰ <i>Цена действует ограниченное время!</i>"
 )
 
 PAYMENT_PREMIUM_TEXT = (
     "⭐️ <b>Тариф «ПРЕМИУМ»</b> — 🔥 Хит продаж!\n\n"
-    "💰 <b>19 990 р.</b> <s>24 990 р.</s>\n\n"
+    "💰 <b>12 990 р.</b>\n\n"
     "📚 Включает <b>все курсы тарифа «Всё включено»</b> +\n"
     "• Специалист по нейросетям\n"
     "• Менеджер Wildberries и OZON\n"
@@ -117,13 +116,13 @@ PAYMENT_PREMIUM_TEXT = (
     "• Дизайнер фото и видео в нейросетях\n"
     "• И другие расширенные курсы!\n\n"
     "📈 Ожидаемый доход: от 200 000 р./мес.\n\n"
-    "🔗 Ссылка на оплату: [добавьте ссылку]\n\n"
+    "💳 Для оплаты и получения доступа напиши напрямую: <b>@Gallu1990</b>\n\n"
     "⏰ <i>Цена действует ограниченное время!</i>"
 )
 
 PAYMENT_VIP_TEXT = (
     "👑 <b>Тариф «VIP»</b> — для масштабирования результатов!\n\n"
-    "💰 <b>24 990 р.</b> <s>34 990 р.</s>\n\n"
+    "💰 <b>19 990 р.</b>\n\n"
     "📚 Включает <b>всё из «Премиум»</b> + легендарные программы основателей:\n"
     "🎬 «Время Reels» — продвижение без выгорания\n"
     "💼 «Практика продаж» — продавай без stories 24/7\n"
@@ -135,7 +134,7 @@ PAYMENT_VIP_TEXT = (
     "📱 «Подписчики с Reels» — 1000–5000 подписчиков/мес.\n"
     "🗓 «Успеть всё!» — идеальный график жизни\n\n"
     "📈 Ожидаемый доход: от 300 000 р./мес.\n\n"
-    "🔗 Ссылка на оплату: [добавьте ссылку]\n\n"
+    "💳 Для оплаты и получения доступа напиши напрямую: <b>@Gallu1990</b>\n\n"
     "⏰ <i>Цена действует ограниченное время!</i>"
 )
 
@@ -179,9 +178,9 @@ INFOGRAPHIC_PAYMENT_TEXT = (
     "✅ Именной сертификат — бесплатно\n"
     "✅ Максимальное наполнение по минимальной цене\n\n"
     "⏰ <b>Специальная цена только 24 часа:</b>\n"
-    "💰 <b>2 500 р.</b> <s>4 990 р.</s>\n\n"
+    "💰 <b>2 500 р.</b>\n\n"
     "📈 Окупишь курс уже в первый месяц и выйдешь на доход от 50 000 р.!\n\n"
-    "🔗 Ссылка на оплату: [добавьте ссылку]"
+    "💳 Для оплаты и получения доступа напиши напрямую: <b>@Gallu1990</b>"
 )
 
 TASKS_TEXT = (
@@ -211,15 +210,15 @@ TASKS_PAYMENT_TEXT = (
     "✅ Именной сертификат после обучения\n"
     "✅ Всё необходимое для старта уже в первый день!\n\n"
     "⏰ <b>Специальная цена только 24 часа:</b>\n"
-    "💰 <b>2 490 р.</b> <s>4 990 р.</s>\n\n"
+    "💰 <b>2 490 р.</b>\n\n"
     "📈 После обучения — доход от 15 000 р. в месяц.\n\n"
-    "🔗 Ссылка на оплату: [добавьте ссылку]"
+    "💳 Для оплаты и получения доступа напиши напрямую: <b>@Gallu1990</b>"
 )
 
 DONE_TEXT = (
     "🎉 <b>Отлично! Добро пожаловать в команду!</b>\n\n"
     "Наш менеджер свяжется с тобой в ближайшее время и отправит доступ.\n\n"
-    "💬 Если хочешь ускорить — напиши напрямую: @Gallu1990 😊\n\n"
+    "💬 Напиши напрямую: <b>@Gallu1990</b> 😊\n\n"
     "📸 Instagram: https://www.instagram.com/gallyu_abdullina\n"
     "📢 Telegram-канал: https://t.me/+p53UUtIURY9hY2Fi"
 )
@@ -227,6 +226,9 @@ DONE_TEXT = (
 # ──────────────────────────────────────────────
 # КЛАВИАТУРЫ
 # ──────────────────────────────────────────────
+
+def kb_home():
+    return [InlineKeyboardButton("🏠 Вернуться на главную", callback_data="home")]
 
 def kb_start():
     return InlineKeyboardMarkup([[InlineKeyboardButton("🔥 Узнать подробности", callback_data="subscribe")]])
@@ -243,20 +245,33 @@ def kb_directions():
     ])
 
 def kb_curator():
-    return InlineKeyboardMarkup([[InlineKeyboardButton("💼 Смотреть тарифы", callback_data="curator_tariff")]])
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton("💼 Смотреть тарифы", callback_data="curator_tariff")],
+        kb_home(),
+    ])
 
 def kb_curator_tariff():
     return InlineKeyboardMarkup([
-        [InlineKeyboardButton("📦 ВСЁ ВКЛЮЧЕНО — 9 990 р.", callback_data="pay_vse")],
-        [InlineKeyboardButton("⭐️ ПРЕМИУМ — 19 990 р.", callback_data="pay_premium")],
-        [InlineKeyboardButton("👑 VIP — 24 990 р.", callback_data="pay_vip")],
+        [InlineKeyboardButton("📦 ВСЁ ВКЛЮЧЕНО — 4 990 р.", callback_data="pay_vse")],
+        [InlineKeyboardButton("⭐️ ПРЕМИУМ — 12 990 р.", callback_data="pay_premium")],
+        [InlineKeyboardButton("👑 VIP — 19 990 р.", callback_data="pay_vip")],
+        kb_home(),
     ])
 
 def kb_payment():
-    return InlineKeyboardMarkup([[InlineKeyboardButton("✅ Оплатил(а)", callback_data="done")]])
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton("✅ Оплатил(а)", callback_data="done")],
+        kb_home(),
+    ])
 
-def kb_one(text, cb):
-    return InlineKeyboardMarkup([[InlineKeyboardButton(text, callback_data=cb)]])
+def kb_one_with_home(text, cb):
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton(text, callback_data=cb)],
+        kb_home(),
+    ])
+
+def kb_done():
+    return InlineKeyboardMarkup([kb_home()])
 
 # ──────────────────────────────────────────────
 # ХЭНДЛЕРЫ
@@ -270,24 +285,20 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
     data = query.data
 
-    if data == "subscribe":
+    if data == "home":
+        await query.message.reply_html(WELCOME_TEXT, reply_markup=kb_start())
+
+    elif data == "subscribe":
         await query.message.reply_html(SUBSCRIBE_TEXT, reply_markup=kb_subscribe())
 
     elif data == "directions":
         await query.message.reply_html(DIRECTIONS_TEXT, reply_markup=kb_directions())
 
+    # ── Куратор ──
     elif data == "curator":
         await query.message.reply_html(CURATOR_TEXT, reply_markup=kb_curator())
 
     elif data == "curator_tariff":
-        try:
-            await query.message.reply_media_group(media=[
-                InputMediaPhoto(media=PHOTO_VSE,     caption="📦 Тариф «ВСЁ ВКЛЮЧЕНО» — 9 990 р."),
-                InputMediaPhoto(media=PHOTO_PREMIUM, caption="⭐️ Тариф «ПРЕМИУМ» — 19 990 р."),
-                InputMediaPhoto(media=PHOTO_VIP,     caption="👑 Тариф «VIP» — 24 990 р."),
-            ])
-        except Exception:
-            pass
         await query.message.reply_html(CURATOR_TARIFF_TEXT, reply_markup=kb_curator_tariff())
 
     elif data == "pay_vse":
@@ -299,34 +310,32 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif data == "pay_vip":
         await query.message.reply_html(PAYMENT_VIP_TEXT, reply_markup=kb_payment())
 
+    # ── Специалист ──
     elif data == "specialist":
-        await query.message.reply_html(SPECIALIST_TEXT, reply_markup=kb_one("🚀 Стать онлайн‑специалистом", "specialist_tariff"))
+        await query.message.reply_html(SPECIALIST_TEXT, reply_markup=kb_one_with_home("🚀 Стать онлайн‑специалистом", "specialist_tariff"))
 
     elif data == "specialist_tariff":
-        try:
-            await query.message.reply_media_group(media=[
-                InputMediaPhoto(media=PHOTO_VSE,     caption="📦 Тариф «ВСЁ ВКЛЮЧЕНО» — 9 990 р."),
-                InputMediaPhoto(media=PHOTO_PREMIUM, caption="⭐️ Тариф «ПРЕМИУМ» — 19 990 р."),
-                InputMediaPhoto(media=PHOTO_VIP,     caption="👑 Тариф «VIP» — 24 990 р."),
-            ])
-        except Exception:
-            pass
         await query.message.reply_html(CURATOR_TARIFF_TEXT, reply_markup=kb_curator_tariff())
 
+    # ── Инфографика ──
     elif data == "infographic":
-        await query.message.reply_html(INFOGRAPHIC_TEXT, reply_markup=kb_one("✅ Хочу оплатить!", "infographic_payment"))
+        await query.message.reply_html(INFOGRAPHIC_TEXT, reply_markup=kb_one_with_home("✅ Хочу оплатить!", "infographic_payment"))
 
     elif data == "infographic_payment":
         await query.message.reply_html(INFOGRAPHIC_PAYMENT_TEXT, reply_markup=kb_payment())
 
+    # ── Задания ──
     elif data == "tasks":
-        await query.message.reply_html(TASKS_TEXT, reply_markup=kb_one("📋 Хочу выполнять задания!", "tasks_payment"))
+        await query.message.reply_html(TASKS_TEXT, reply_markup=kb_one_with_home("📋 Хочу выполнять задания!", "tasks_payment"))
 
     elif data == "tasks_payment":
-        await query.message.reply_html(TASKS_PAYMENT_TEXT, reply_markup=kb_one("🚀 Начнём!", "done"))
+        await query.message.reply_html(TASKS_PAYMENT_TEXT, reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton("🚀 Начнём!", callback_data="done")],
+            kb_home(),
+        ]))
 
     elif data == "done":
-        await query.message.reply_html(DONE_TEXT)
+        await query.message.reply_html(DONE_TEXT, reply_markup=kb_done())
 
 # ──────────────────────────────────────────────
 # ЗАПУСК
