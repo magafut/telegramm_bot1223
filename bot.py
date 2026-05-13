@@ -75,9 +75,9 @@ CURATOR_TARIFF_TEXT = (
     "💼 <b>Выбери свой тариф и стань куратором INSTART!</b>\n\n"
     "📦 <b>ВСЁ ВКЛЮЧЕНО</b> — <b>4 990 р.</b>\n"
     "Более 20 курсов по востребованным онлайн-профессиям\n\n"
-    "⭐️ <b>ПРЕМИУМ</b> — <b>12 990 р.</b>\n"
+    "⭐️ <b>ПРЕМИУМ</b> — <b>8 000 р.</b>\n"
     "Хит продаж! Расширенный пакет курсов + рабочие инструменты\n\n"
-    "👑 <b>VIP</b> — <b>19 990 р.</b>\n"
+    "👑 <b>VIP</b> — <b>12 990 р.</b>\n"
     "Легендарные программы основателей INSTART + курсы для масштабирования\n\n"
     "🎯 <b>Все тарифы включают:</b>\n"
     "• Обучение для кураторов\n"
@@ -107,7 +107,7 @@ PAYMENT_VSE_TEXT = (
 
 PAYMENT_PREMIUM_TEXT = (
     "⭐️ <b>Тариф «ПРЕМИУМ»</b> — 🔥 Хит продаж!\n\n"
-    "💰 <b>12 990 р.</b>\n\n"
+    "💰 <b>8 000 р.</b>\n\n"
     "📚 Включает <b>все курсы тарифа «Всё включено»</b> +\n"
     "• Специалист по нейросетям\n"
     "• Менеджер Wildberries и OZON\n"
@@ -122,7 +122,7 @@ PAYMENT_PREMIUM_TEXT = (
 
 PAYMENT_VIP_TEXT = (
     "👑 <b>Тариф «VIP»</b> — для масштабирования результатов!\n\n"
-    "💰 <b>19 990 р.</b>\n\n"
+    "💰 <b>12 990 р.</b>\n\n"
     "📚 Включает <b>всё из «Премиум»</b> + легендарные программы основателей:\n"
     "🎬 «Время Reels» — продвижение без выгорания\n"
     "💼 «Практика продаж» — продавай без stories 24/7\n"
@@ -253,8 +253,8 @@ def kb_curator():
 def kb_curator_tariff():
     return InlineKeyboardMarkup([
         [InlineKeyboardButton("📦 ВСЁ ВКЛЮЧЕНО — 4 990 р.", callback_data="pay_vse")],
-        [InlineKeyboardButton("⭐️ ПРЕМИУМ — 12 990 р.", callback_data="pay_premium")],
-        [InlineKeyboardButton("👑 VIP — 19 990 р.", callback_data="pay_vip")],
+        [InlineKeyboardButton("⭐️ ПРЕМИУМ — 8 000 р.", callback_data="pay_premium")],
+        [InlineKeyboardButton("👑 VIP — 12 990 р.", callback_data="pay_vip")],
         kb_home(),
     ])
 
