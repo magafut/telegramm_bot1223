@@ -107,7 +107,7 @@ PAYMENT_VSE_TEXT = (
 
 PAYMENT_PREMIUM_TEXT = (
     "⭐️ <b>Тариф «ПРЕМИУМ»</b> — 🔥 Хит продаж!\n\n"
-    "💰 <b>8 000 р.</b>\n\n"
+    "💰 <b>7 000 р.</b>\n\n"
     "📚 Включает <b>все курсы тарифа «Всё включено»</b> +\n"
     "• Специалист по нейросетям\n"
     "• Менеджер Wildberries и OZON\n"
@@ -122,7 +122,7 @@ PAYMENT_PREMIUM_TEXT = (
 
 PAYMENT_VIP_TEXT = (
     "👑 <b>Тариф «VIP»</b> — для масштабирования результатов!\n\n"
-    "💰 <b>12 990 р.</b>\n\n"
+    "💰 <b>11 990 р.</b>\n\n"
     "📚 Включает <b>всё из «Премиум»</b> + легендарные программы основателей:\n"
     "🎬 «Время Reels» — продвижение без выгорания\n"
     "💼 «Практика продаж» — продавай без stories 24/7\n"
@@ -178,7 +178,7 @@ INFOGRAPHIC_PAYMENT_TEXT = (
     "✅ Именной сертификат — бесплатно\n"
     "✅ Максимальное наполнение по минимальной цене\n\n"
     "⏰ <b>Специальная цена только 24 часа:</b>\n"
-    "💰 <b>2 500 р.</b>\n\n"
+    "💰 <b>1 500 р.</b>\n\n"
     "📈 Окупишь курс уже в первый месяц и выйдешь на доход от 50 000 р.!\n\n"
     "💳 Для оплаты и получения доступа напиши напрямую: <b>@Gallu1990</b>"
 )
@@ -210,7 +210,7 @@ TASKS_PAYMENT_TEXT = (
     "✅ Именной сертификат после обучения\n"
     "✅ Всё необходимое для старта уже в первый день!\n\n"
     "⏰ <b>Специальная цена только 24 часа:</b>\n"
-    "💰 <b>2 490 р.</b>\n\n"
+    "💰 <b>1 490 р.</b>\n\n"
     "📈 После обучения — доход от 15 000 р. в месяц.\n\n"
     "💳 Для оплаты и получения доступа напиши напрямую: <b>@Gallu1990</b>"
 )
@@ -252,9 +252,9 @@ def kb_curator():
 
 def kb_curator_tariff():
     return InlineKeyboardMarkup([
-        [InlineKeyboardButton("📦 ВСЁ ВКЛЮЧЕНО — 4 990 р.", callback_data="pay_vse")],
-        [InlineKeyboardButton("⭐️ ПРЕМИУМ — 8 000 р.", callback_data="pay_premium")],
-        [InlineKeyboardButton("👑 VIP — 12 990 р.", callback_data="pay_vip")],
+        [InlineKeyboardButton("📦 ВСЁ ВКЛЮЧЕНО — 3 990 р.", callback_data="pay_vse")],
+        [InlineKeyboardButton("⭐️ ПРЕМИУМ — 7 000 р.", callback_data="pay_premium")],
+        [InlineKeyboardButton("👑 VIP — 11 990 р.", callback_data="pay_vip")],
         kb_home(),
     ])
 
